@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Kinh tế Nghệ An</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f8ff;
+            border-color: var(--secondary);
+        }
+
+        .option.correct {
+            background-color: #d4edda;
+            border-color: var(--success);
+            color: #155724;
+        }
+
+        .option.wrong {
+            background-color: #f8d7da;
+            border-color: var(--error);
+            color: #721c24;
+        }
+
+        #result-area {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 12px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Trắc nghiệm Địa lý Kinh tế Nghệ An</h1>
+    <div id="quiz-body">
+        </div>
+    <div id="result-area"></div>
+    <button onclick="checkAnswers()">Nộp bài</button>
+</div>
+
+<script>
+    const quizData = [
+        {
+            q: "Sự thay đổi tỉ trọng ngành Công nghiệp chế biến, chế tạo tại Nghệ An (2010-2022) như thế nào?",
+            options: [
+                "Giảm dần qua các năm.",
+                "Tăng trưởng mạnh mẽ và giữ vai trò chủ đạo.",
+                "Không thay đổi so với các ngành khác.",
+                "Biến động thất thường, không ổn định."
+            ],
+            correct: 1
+        },
+        {
+            q: "Thành phần kinh tế nào tại Nghệ An luôn chiếm tỉ trọng cao nhất và có xu hướng tăng liên tục?",
+            options: [
+                "Kinh tế nhà nước.",
+                "Kinh tế có vốn đầu tư nước ngoài (FDI).",
+                "Kinh tế ngoài nhà nước.",
+                "Kinh tế tập thể."
+            ],
+            correct: 2
+        },
+        {
+            q: "Tại sao tỉ trọng vốn đầu tư nước ngoài (FDI) của Nghệ An năm 2022 (2,7%) được coi là hạn chế?",
+            options: [
+                "Vì cao hơn mức bình quân cả nước.",
+                "Vì thấp hơn nhiều so với bình quân cả nước (20%) và tỉnh Thanh Hóa (16%).",
+                "Vì Nghệ An không có hạ tầng giao thông.",
+                "Vì tỉnh không ưu tiên phát triển công nghiệp."
+            ],
+            correct: 1
+        },
+        {
+            q: "Việc hình thành vùng sản xuất nông nghiệp tập trung mang lại ý nghĩa gì?",
+            options: [
+                "Giảm sản lượng nông sản hàng hóa.",
+                "Chỉ tập trung phát triển các huyện miền núi phía Tây.",
+                "Phát huy lợi thế so sánh, áp dụng KH-KT và tạo khối lượng hàng hóa lớn.",
+                "Hạn chế việc sử dụng máy móc trong sản xuất."
+            ],
+            correct: 2
+        },
+        {
+            q: "Địa bàn nào được coi là 'hạt nhân' động lực thu hút các dự án đầu tư lớn tại Nghệ An?",
+            options: [
+                "KKT Đông Nam và VSIP Nghệ An.",
+                "Vùng rừng núi phía Tây.",
+                "Các huyện biên giới.",
+                "Trung tâm huyện Nam Đàn."
+            ],
+            correct: 0
+        },
+        {
+            q: "Cửa Lò và Kim Liên - Nam Đàn là các trung tâm dịch vụ trọng điểm về lĩnh vực nào?",
+            options: [
+                "Công nghiệp nặng.",
+                "Du lịch biển và văn hóa - lịch sử.",
+                "Khai thác khoáng sản.",
+                "Nông nghiệp công nghệ cao."
+            ],
+            correct: 1
+        },
+        {
+            q: "Mục tiêu chính của việc chuyển dịch cơ cấu kinh tế Nghệ An là gì?",
+            options: [
+                "Tập trung hoàn toàn vào ngành dịch vụ.",
+                "Để trở thành tỉnh khá của cả nước và đảm bảo phát triển bền vững.",
+                "Để giảm bớt dân số tại các đô thị.",
+                "Để duy trì mô hình kinh tế tự cung tự cấp."
+            ],
+            correct: 1
+        },
+        {
+            q: "Nghệ An ưu tiên phát triển nhóm ngành công nghiệp nào theo hướng tăng trưởng xanh?",
+            options: [
+                "Khai thác than và khoáng sản thô.",
+                "Dệt may gia công giá rẻ.",
+                "Công nghiệp chế biến, chế tạo, công nghệ cao và năng lượng tái tạo.",
+                "Sản xuất thủ công mỹ nghệ."
+            ],
+            correct: 2
+        },
+        {
+            q: "Tại sao thành phố Vinh là địa bàn động lực dịch vụ lớn nhất tỉnh?",
+            options: [
+                "Vì là trung tâm chính trị, kinh tế, có hạ tầng giao thông thuận lợi.",
+                "Vì có bãi biển đẹp nhất miền Trung.",
+                "Vì tập trung nhiều khu bảo tồn thiên nhiên.",
+                "Vì là nơi duy nhất có sản xuất nông nghiệp."
+            ],
+            correct: 0
+        },
+        {
+            q: "Tại sao nông nghiệp Nghệ An cần ứng dụng KH-CN và thích ứng biến đổi khí hậu?",
+            options: [
+                "Vì tỉnh không còn quỹ đất sản xuất.",
+                "Để thay thế hoàn toàn lao động con người.",
+                "Vì thường xuyên chịu ảnh hưởng của thiên tai và để tăng giá trị sản phẩm.",
+                "Vì mục tiêu xuất khẩu 100% nông sản."
+            ],
+            correct: 2
+        }
+    ];
+
+    function renderQuiz() {
+        const quizBody = document.getElementById('quiz-body');
+        quizBody.innerHTML = quizData.map((item, index) => `
+            <div class="question-container" id="q${index}">
+                <div class="question-text">Câu ${index + 1}: ${item.q}</div>
+                <div class="options">
+                    ${item.options.map((opt, i) => `
+                        <div class="option" onclick="selectOption(${index}, ${i}, this)">
+                            ${String.fromCharCode(65 + i)}. ${opt}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    function selectOption(qIdx, oIdx, element) {
+        userAnswers[qIdx] = oIdx;
+        const siblings = element.parentElement.querySelectorAll('.option');
+        siblings.forEach(s => s.style.borderColor = '#ddd');
+        siblings.forEach(s => s.style.backgroundColor = 'white');
+        element.style.borderColor = 'var(--secondary)';
+        element.style.backgroundColor = '#f0f8ff';
+    }
+
+    function checkAnswers() {
+        let score = 0;
+        quizData.forEach((item, index) => {
+            const container = document.getElementById(`q${index}`);
+            const options = container.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                opt.classList.remove('correct', 'wrong');
+                if (i === item.correct) {
+                    opt.classList.add('correct');
+                }
+                if (userAnswers[index] === i && i !== item.correct) {
+                    opt.classList.add('wrong');
+                }
+            });
+
+            if (userAnswers[index] === item.correct) score++;
+        });
+
+        const resultArea = document.getElementById('result-area');
+        resultArea.innerHTML = `Kết quả: ${score}/${quizData.length} câu đúng!`;
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
